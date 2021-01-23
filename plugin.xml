@@ -37,7 +37,7 @@
       <resource-file src="src/ios/Font/Rubik-MediumItalic.ttf" />
       <resource-file src="src/ios/Font/Rubik-Regular.ttf" />
       <header-file  src="src/ios/Integration/QMC Health ID-Bridging-Header.h" />
-      <header-file  src="src/ios/Integration/QMC Health ID.h"/>
+      <header-file  src="src/ios/Integration/QMC Health ID-Swift.h"/>
        <resource-file src="src/ios/LPMessagingSDK/LPMessagingSDK-dSYMs/09380BE9-B33C-3659-BDBA-948175E70798.bcsymbolmap"/> 
        <resource-file src="src/ios/LPMessagingSDK/LPMessagingSDKModels.bundle" />  
       <source-file src="src/ios/LPMessagingSDK/LPMessagingSDK.xcframework" target-dir="lib" framework="true" />
