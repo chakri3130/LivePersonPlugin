@@ -5,11 +5,13 @@
   "cordova": {
     "id": "cordova.plugin.LivePersonPlugin",
     "platforms": [
+      "android",
       "ios"
     ]
   },
   "keywords": [
     "ecosystem:cordova",
+    "cordova-android",
     "cordova-ios"
   ],
   "author": "",
