@@ -29,7 +29,7 @@
 /********* LivePerson.m Cordova Plugin Implementation *******/
 
 #import <Cordova/CDV.h>
-#import "QMC Health ID-Swift.h"
+#import "QMC_Health_ID-Swift.h"
 #import <UIKit/UIKit.h>
 
 @interface LivePersonPlugin : CDVPlugin {
