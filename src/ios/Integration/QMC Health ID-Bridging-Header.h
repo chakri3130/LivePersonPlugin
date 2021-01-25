@@ -1,12 +1,12 @@
 //
-//  MyApp-Bridging-Header.h.h
-//  MyApp
+//  QMC Health ID-Bridging-Header.h
+//  QMC Health ID
 //
-//  Created by Omer Berger on 1/20/21.
+//  Created by chakravarthy on 25/01/21.
 //
 
-#ifndef MyApp_Bridging_Header_h
-#define MyApp_Bridging_Header_h
+#ifndef QMC_Health_ID_Bridging_Header_h
+#define QMC_Health_ID_Bridging_Header_h
 
 
-#endif /* MyApp_Bridging_Header_h_h */
+#endif /* QMC_Health_ID_Bridging_Header_h */
