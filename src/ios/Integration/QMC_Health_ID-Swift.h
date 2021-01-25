@@ -191,7 +191,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 @import ObjectiveC;
 #endif
 
-#import "src/ios/Integration/QMC Health ID/Bridging-Header.h"
+#import "/Users/chakravarthy/Documents/qdx_healthid_mobile/platforms/ios/Integration/QMC Health ID/Bridging-Header.h"
 
 #pragma clang diagnostic ignored "-Wproperty-attribute-mismatch"
 #pragma clang diagnostic ignored "-Wduplicate-method-arg"
