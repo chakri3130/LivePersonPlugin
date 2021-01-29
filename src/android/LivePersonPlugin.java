@@ -2,6 +2,7 @@ package cordova.plugin.LivePersonPlugin;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.liveperson.infra.BadArgumentException;
 import com.liveperson.infra.CampaignInfo;
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,19 +50,44 @@ public class LivePersonPlugin extends CordovaPlugin {
 //    private static final String APP_INSTALLATION_ID = "81be1920-b6cb-450d-87eb-d21b9c90e62f";
 
     //  BH account
-    private static final String BRAND_ID = "71373930";
-    private static final String APP_INSTALLATION_ID = "8bc2f66b-fcf7-4aae-b559-69e322ea2504";
+    private  String BRAND_ID = "71373930";
+    private  String APP_INSTALLATION_ID = "8bc2f66b-fcf7-4aae-b559-69e322ea2504";
 
-    private static final String APP_ID = "com.quantummaterialscorp.healthid"; //TODO set appId. It's the applicationId, which will be used for FCM.
-    private static final String ISSUER = "QMC_Android";
+    private  String APP_ID = "com.quantummaterialscorp.healthid"; //TODO set appId. It's the applicationId, which will be used for FCM.
+    private  String ISSUER = "QMC_Android";
+    private  String firstName;
+    private  List<String> customEntryPoint = new ArrayList<>();
 
     private ChatEntryPoint entryPoint = ChatEntryPoint.androidDefault; //TODO pass the correct entry point.
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("ConnectToBot")) {
-            String message = args.getString(0);
-            this.ConnectToBot(message, callbackContext);
+            firstName = args.getString(0);
+            BRAND_ID = args.getString(1);
+            APP_INSTALLATION_ID = args.getString(2);
+            APP_ID = args.getString(3);
+            ISSUER = args.getString(4);
+            try {
+                JSONObject customEntryPoints = new JSONObject();
+                customEntryPoints.put("entryPoint", args.getString(5));
+                Log.d("Recieved Custom",customEntryPoints.toString());
+                customEntryPoints.put("entryPointEnvironment", args.getString(6));
+                customEntryPoints.put("entryPointCountry", args.getString(7));
+                customEntryPoints.put("entryPointlanguage", args.getString(8));
+                Log.d("Recieved Custom",customEntryPoints.toString());
+                this.ConnectToBot(firstName, callbackContext);
+
+            }catch (JSONException e)
+            {
+                Log.d("Recieved Custom",e.toString());
+            }
+
+
+
+
+
+
             return true;
         }
         return false;
