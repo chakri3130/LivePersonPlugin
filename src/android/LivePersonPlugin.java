@@ -43,10 +43,16 @@ import java.util.List;
  */
 public class LivePersonPlugin extends CordovaPlugin {
 
-    private static final String BRAND_ID = "70387001";
-    private static final String APP_ID = "io.ionic.starter"; //TODO set appId. It's the applicationId, which will be used for FCM.
-    private static final String APP_INSTALLATION_ID = "81be1920-b6cb-450d-87eb-d21b9c90e62f";
-    private static final String ISSUER = "";
+//    QMC
+//    private static final String BRAND_ID = "70387001";
+//    private static final String APP_INSTALLATION_ID = "81be1920-b6cb-450d-87eb-d21b9c90e62f";
+
+    //  BH account
+    private static final String BRAND_ID = "71373930";
+    private static final String APP_INSTALLATION_ID = "8bc2f66b-fcf7-4aae-b559-69e322ea2504";
+
+    private static final String APP_ID = "com.quantummaterialscorp.healthid"; //TODO set appId. It's the applicationId, which will be used for FCM.
+    private static final String ISSUER = "QMC_Android";
 
     private ChatEntryPoint entryPoint = ChatEntryPoint.androidDefault; //TODO pass the correct entry point.
 
@@ -112,6 +118,7 @@ public class LivePersonPlugin extends CordovaPlugin {
                                 conversationViewParams.setLpWelcomeMessage(getWelcomeMessage(entryPoint));
                                 setUserProfile();
                                 LivePerson.showConversation(cordova.getActivity(), getLPAuthenticationParams(), conversationViewParams);
+                                registerLPPusher("");
                             } catch (BadArgumentException e) {
                                 //TODO add error handling
                             }
@@ -161,7 +168,7 @@ public class LivePersonPlugin extends CordovaPlugin {
             //TODO add error handling
         }
         lpWelcomeMessage.setNumberOfItemsPerRow(1);
-        lpWelcomeMessage.setMessageFrequency(LPWelcomeMessage.MessageFrequency.EVERY_CONVERSATION);
+        lpWelcomeMessage.setMessageFrequency(LPWelcomeMessage.MessageFrequency.FIRST_TIME_CONVERSATION);
         return lpWelcomeMessage;
     }
 

@@ -62,12 +62,13 @@
       <source-file src="src/android/ChatEntryPoint.java" target-dir="src/cordova/plugin/LivePersonPlugin/ChatEntryPoint" />
       <framework src="com.liveperson.android:lp_messaging_sdk:5.5.0" />
       <resource-file src="src/android/res/drawable/ic_action_name.xml" target="res/drawable/ic_action_name.xml" />
+      <resource-file src="src/android/res/drawable/ic_bg.png" target="res/drawable/ic_bg.png" />
+      <resource-file src="src/android/res/drawable/ic_chat_heart_cutout.xml" target="res/drawable/ic_chat_heart_cutout.xml" />
       <resource-file src="src/android/res/font/rubik_regular.ttf" target="res/font/rubik_regular.ttf" />
       <resource-file src="src/android/res/layout/activity_live_person_chat_room.xml" target="res/layout/activity_live_person_chat_room.xml" />
       <resource-file src="src/android/res/values/branding.xml" target="res/values/branding.xml" />
       <resource-file src="src/android/res/values/colors.xml" target="res/values/colors.xml" />
       <resource-file src="src/android/res/values/dimens.xml" target="res/values/dimens.xml" />
       <resource-file src="src/android/res/values/strings.xml" target="res/values/strings.xml" />
-
    </platform>
 </plugin>
