@@ -41,6 +41,7 @@
 }
 // - (void)coolMethod:(CDVInvokedUrlCommand*)command;
 - (void)ConnectToBot:(CDVInvokedUrlCommand*)command;
+- (void)instantiateLPMessagingSDK:(CDVInvokedUrlCommand*)command;
 
 @property (strong, nonatomic) UINavigationController* lpNavigationController;
 @property (strong, nonatomic)LPMessagingWrapper* lpMessagingWrapper;
@@ -51,26 +52,43 @@
 
 - (void)ConnectToBot:(CDVInvokedUrlCommand*)command {
 
-    if (self.lpMessagingWrapper == nil) {
-        //Set user
-        LPUser* user = [[LPUser alloc]initWithFirstName: @""
-                                               lastName: @""
-                                               nickName: @""
-                                                    uid: @""
-                                        profileImageURL: @""
-                                            phoneNumber: @""
-                                             employeeID: @""];
+    // if (self.lpMessagingWrapper == nil) {
+    //     //Set user
+    //     LPUser* user = [[LPUser alloc]initWithFirstName: @""
+    //                                            lastName: @""
+    //                                            nickName: @""
+    //                                                 uid: @""
+    //                                     profileImageURL: @""
+    //                                         phoneNumber: @""
+    //                                          employeeID: @""];
 
-        //Set Auth
-        LPAuthenticationParams* authParams =
-        [[LPAuthenticationParams alloc] initWithAuthenticationCode: @""
-                                                               jwt: @""
-                                                       redirectURI: @""
-                                             certPinningPublicKeys: @[@"", @""]
-                                                authenticationType: LPAuthenticationTypeSignup];
+    //     //Set Auth
+    //     LPAuthenticationParams* authParams =
+    //     [[LPAuthenticationParams alloc] initWithAuthenticationCode: @""
+    //                                                            jwt: @""
+    //                                                    redirectURI: @""
+    //                                          certPinningPublicKeys: @[@"", @""]
+    //                                             authenticationType: LPAuthenticationTypeSignup];
 
-        self.lpMessagingWrapper = [[LPMessagingWrapper alloc] initWithUser: nil
-                                                      authenticationParams: nil];
+    //     self.lpMessagingWrapper = [[LPMessagingWrapper alloc] initWithUser: nil
+    //                                                   authenticationParams: nil];
+    NSArray *entryPointsFromPlugin = @[@"dev", @"en",@"ios-welcome",@"us"];
+
+    [self.lpMessagingWrapper getEngagementWithEntryPoints:entryPointsFromPlugin
+                                               completion:^(BOOL succsess) {
+        
+        
+        
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Engagements Received"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{   [self.lpMessagingWrapper showChatWithCompletion:^(BOOL succsess) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"LP_Messaging_Chat_Conversation_opened"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];  });
+        
+        
+    }];
+    
     }
 
     //Login SDK
@@ -83,34 +101,34 @@
     /**
         ios-welcome, prodm, us, en
      */
-    NSDictionary* entryPoint = @{@"entryPoint" : @"ios-welcome",
-                                 @"environment" : @"prod",
-                                 @"locale" : @"us",
-                                 @"language" : @"en"};
+    // NSDictionary* entryPoint = @{@"entryPoint" : @"ios-welcome",
+    //                              @"environment" : @"prod",
+    //                              @"locale" : @"us",
+    //                              @"language" : @"en"};
 
 
-    //show chat (after success callback from engagement:
-    [self.lpMessagingWrapper showChat];
+    // //show chat (after success callback from engagement:
+    // [self.lpMessagingWrapper showChat];
 
  }
 
+ 
+ - (void)instantiateLPMessagingSDK:(CDVInvokedUrlCommand*)command {
+
+
+   if (self.lpMessagingWrapper == nil) {
+
+//        self.lpMessagingWrapper =  [[LPMessagingWrapper alloc] init];
+        self.lpMessagingWrapper = [[LPMessagingWrapper alloc] initWithUser: nil
+                                                      authenticationParams: nil];
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"LP_SDk_has_been_Initialized"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+ }
+ 
+ 
+ }
+
+
 @end
 
-
-// NSDictionary *chatBotDict = [[NSDictionary alloc]initWithObjectsAndKeys:@"firstName",[command.arguments objectAtIndex:0],@"lastName",[command.arguments objectAtIndex:1],@"environment", [command.arguments objectAtIndex:2],@"brandID", [command.arguments objectAtIndex:3],@"mode", [command.arguments objectAtIndex:4],@"authToken", [command.arguments objectAtIndex:5]//
-
-//     dispatch_async(dispatch_get_main_queue(), ^{
-//         UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//         self.lpNavigationController = self.lpNavigationController ? :
-//         [sb instantiateViewControllerWithIdentifier:@"LPNavigation"];
-//
-//        // LPMessagingSwift *vc = [sb instantiateViewControllerWithIdentifier:@"LPMessagingSwift"];
-//         self.lpNavigationController.modalPresentationStyle = UIModalPresentationFullScreen;
-//         [self.viewController presentViewController:self.lpNavigationController
-//                                           animated:YES completion:^{
-//             CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
-//             // [vc connectToRoom:room];
-//             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-//         }];
-//     });
 
