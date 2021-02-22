@@ -191,7 +191,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 @import ObjectiveC;
 #endif
 
-#import "/Users/chakravarthy/Documents/qdx_healthid_mobile/platforms/ios/Integration/QMC Health ID/Bridging-Header.h"
+#import "/Users/chakravarthy/Documents/qdx_healthid_mobile/platforms/ios/QMC Health ID/Bridging-Header.h"
 
 #pragma clang diagnostic ignored "-Wproperty-attribute-mismatch"
 #pragma clang diagnostic ignored "-Wduplicate-method-arg"
@@ -248,11 +248,18 @@ SWIFT_CLASS_NAMED("IonicNativeAuthPlugin")
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 
+@class LPUser;
+@class LPAuthenticationParams;
 
 SWIFT_CLASS("_TtC13QMC_Health_ID18LPMessagingWrapper")
 @interface LPMessagingWrapper : NSObject
-- (void)showChat;
+- (nonnull instancetype)initWithUser:(LPUser * _Nullable)user authenticationParams:(LPAuthenticationParams * _Nullable)authenticationParams;
+- (void)getEngagementWithEntryPoints:(NSArray<NSString *> * _Nonnull)entryPoints completion:(void (^ _Nullable)(BOOL))completion;
+- (void)showChatWithCompletion:(void (^ _Nullable)(BOOL))completion;
+- (void)logOutWithCompletion:(void (^ _Nullable)(BOOL))completion;
+- (void)clearHistoryWithCompletion:(void (^ _Nullable)(BOOL))completion;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+
 @end
 
 
