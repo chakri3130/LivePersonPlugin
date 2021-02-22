@@ -35,30 +35,26 @@ typedef void (^LPSDKCompletion)(BOOL completion);
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"LP_MESSAgging_SDk_has_been_Initialized"];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         
-        NSArray *entryPointsFromPlugin = @[[command.arguments objectAtIndex:1],[command.arguments objectAtIndex:2],[command.arguments objectAtIndex:3],[command.arguments objectAtIndex:4]];
-        [self getEngagement:entryPointsFromPlugin completionAction:^(BOOL completion) {
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Engegment Success"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        }];
-        
-    }
-    else
-    {
-        NSArray *entryPointsFromPlugin = @[[command.arguments objectAtIndex:1],[command.arguments objectAtIndex:2],[command.arguments objectAtIndex:3],[command.arguments objectAtIndex:4]];
-        [self getEngagement:entryPointsFromPlugin completionAction:^(BOOL completion) {
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Engegment Success"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        }];
     }
 }
 
 
 - (void)ConnectToBot:(CDVInvokedUrlCommand*)command {
-        [self showChatWithCompletionAction:^(BOOL completion) {
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Bella chat successfully opened"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        }];
-    
+    NSArray *entryPointsFromPlugin = @[[command.arguments objectAtIndex:0],[command.arguments objectAtIndex:1],[command.arguments objectAtIndex:2],[command.arguments objectAtIndex:3]];
+    [self getEngagement:entryPointsFromPlugin completionAction:^(BOOL completion) {
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Engegment Success"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+
+- (void)showChat:(CDVInvokedUrlCommand*)command {
+
+    [self showChatWithCompletionAction:^(BOOL completion) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Conversation Opened"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+
 }
 
 
