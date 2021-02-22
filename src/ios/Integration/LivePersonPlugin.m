@@ -1,133 +1,96 @@
-// #import <Cordova/CDV.h>
-// #import "QMC_Health_ID-Swift.h"
-// #import <UIKit/UIKit.h>
 
-// @interface LivePersonPlugin : CDVPlugin {
-//   // Member variables go here.
-// }
-// // - (void)coolMethod:(CDVInvokedUrlCommand*)command;
-// - (void)ConnectToBot:(CDVInvokedUrlCommand*)command;
-
-// @property (strong, nonatomic) UINavigationController* lpNavigationController;
-
-// @end
-
-// @implementation LivePersonPlugin
-
-
-// - (void)ConnectToBot:(CDVInvokedUrlCommand*)command
-// {
-
-//     LPMessagingWrapper* lpMessagingWrapper =  [[LPMessagingWrapper alloc]init];
-//     [lpMessagingWrapper showChat];
-
-// // NSDictionary *chatBotDict = [[NSDictionary alloc]initWithObjectsAndKeys:@"firstName",[command.arguments objectAtIndex:0],@"lastName",[command.arguments objectAtIndex:1],@"environment", [command.arguments objectAtIndex:2],@"brandID", [command.arguments objectAtIndex:3],@"mode", [command.arguments objectAtIndex:4],@"authToken", [command.arguments objectAtIndex:5]//
-         
-//  }
-
-
-
-
-
-
-// @end
 #import <Cordova/CDV.h>
-#import "QMC_Health_ID-Swift.h"
 #import <UIKit/UIKit.h>
+#import "QMC_Health_ID-Swift.h"
 #import <LPMessagingSDK/LPMessagingSDK.h>
 
 @interface LivePersonPlugin : CDVPlugin {
-  // Member variables go here.
+    // Member variables go here.
 }
 // - (void)coolMethod:(CDVInvokedUrlCommand*)command;
-- (void)ConnectToBot:(CDVInvokedUrlCommand*)command;
 - (void)instantiateLPMessagingSDK:(CDVInvokedUrlCommand*)command;
 
 @property (strong, nonatomic) UINavigationController* lpNavigationController;
 @property (strong, nonatomic)LPMessagingWrapper* lpMessagingWrapper;
+typedef void (^LPSDKCompletion)(BOOL completion);
+
 @end
 
 @implementation LivePersonPlugin
 
-
-- (void)ConnectToBot:(CDVInvokedUrlCommand*)command {
-
-    // if (self.lpMessagingWrapper == nil) {
-    //     //Set user
-    //     LPUser* user = [[LPUser alloc]initWithFirstName: @""
-    //                                            lastName: @""
-    //                                            nickName: @""
-    //                                                 uid: @""
-    //                                     profileImageURL: @""
-    //                                         phoneNumber: @""
-    //                                          employeeID: @""];
-
-    //     //Set Auth
-    //     LPAuthenticationParams* authParams =
-    //     [[LPAuthenticationParams alloc] initWithAuthenticationCode: @""
-    //                                                            jwt: @""
-    //                                                    redirectURI: @""
-    //                                          certPinningPublicKeys: @[@"", @""]
-    //                                             authenticationType: LPAuthenticationTypeSignup];
-
-    //     self.lpMessagingWrapper = [[LPMessagingWrapper alloc] initWithUser: nil
-    //                                                   authenticationParams: nil];
-    NSArray *entryPointsFromPlugin = @[@"dev", @"en",@"ios-welcome",@"us"];
-
-    [self.lpMessagingWrapper getEngagementWithEntryPoints:entryPointsFromPlugin
-                                               completion:^(BOOL succsess) {
-        
-        
-        
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Engagements Received"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{   [self.lpMessagingWrapper showChatWithCompletion:^(BOOL succsess) {
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"LP_Messaging_Chat_Conversation_opened"];
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        }];  });
-        
-        
-    }];
-    
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+         
     }
+    return self;
+}
 
-    //Login SDK
+- (void)instantiateLPMessagingSDK:(CDVInvokedUrlCommand*)command {
 
-    //Logougt SDK
-
-    //Clear History
-    
-    //Set engagement with entry point example (callback):
-    /**
-        ios-welcome, prodm, us, en
-     */
-    // NSDictionary* entryPoint = @{@"entryPoint" : @"ios-welcome",
-    //                              @"environment" : @"prod",
-    //                              @"locale" : @"us",
-    //                              @"language" : @"en"};
-
-
-    // //show chat (after success callback from engagement:
-    // [self.lpMessagingWrapper showChat];
-
- }
-
- 
- - (void)instantiateLPMessagingSDK:(CDVInvokedUrlCommand*)command {
-
-
-   if (self.lpMessagingWrapper == nil) {
-
-//        self.lpMessagingWrapper =  [[LPMessagingWrapper alloc] init];
+    if (self.lpMessagingWrapper == nil) {
         self.lpMessagingWrapper = [[LPMessagingWrapper alloc] initWithUser: nil
                                                       authenticationParams: nil];
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"LP_SDk_has_been_Initialized"];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
- }
- 
- 
- }
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"LP_MESSAgging_SDk_has_been_Initialized"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        
+        NSArray *entryPointsFromPlugin = @[[command.arguments objectAtIndex:1],[command.arguments objectAtIndex:2],[command.arguments objectAtIndex:3],[command.arguments objectAtIndex:4]];
+        [self getEngagement:entryPointsFromPlugin completionAction:^(BOOL completion) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Engegment Success"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+        
+    }
+    else
+    {
+        NSArray *entryPointsFromPlugin = @[[command.arguments objectAtIndex:1],[command.arguments objectAtIndex:2],[command.arguments objectAtIndex:3],[command.arguments objectAtIndex:4]];
+        [self getEngagement:entryPointsFromPlugin completionAction:^(BOOL completion) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Engegment Success"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    }
+}
 
+
+- (void)ConnectToBot:(CDVInvokedUrlCommand*)command {
+        [self showChatWithCompletionAction:^(BOOL completion) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Bella chat successfully opened"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    
+}
+
+
+
+- (void)getEngagement:(NSArray*)entryPoints completionAction:(LPSDKCompletion)completion {
+    [self.lpMessagingWrapper getEngagementWithEntryPoints:entryPoints
+                                               completion:^(BOOL succsess) {
+        completion(succsess);
+    }];
+}
+
+- (void)showChatWithCompletionAction:(LPSDKCompletion)completion {
+    [self.lpMessagingWrapper showChatWithCompletion:^(BOOL succsess) {
+        completion(succsess);
+    }];
+}
+
+- (void)logOutWithCompletionAction:(LPSDKCompletion)completion  {
+    [self.lpMessagingWrapper logOutWithCompletion:^(BOOL succsess) {
+        completion(succsess);
+    }];
+}
+
+- (void)clearHistoryWithCompletionAction:(LPSDKCompletion)completion {
+    [self.lpMessagingWrapper clearHistoryWithCompletion:^(BOOL succsess) {
+        completion(succsess);
+    }];
+}
+
+- (void)chatDismissed {
+    NSLog(@"Chat Dismissed");
+}
 
 @end
 
