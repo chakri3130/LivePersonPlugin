@@ -34,7 +34,7 @@ public class LivePersonPlugin extends CordovaPlugin {
     private String ISSUER = "QMC_Android";
     private String firstName;
     private String LPResponse;
-    LPEngagementResponse maintainResponse
+    LPEngagementResponse maintainResponse;
 
     private JSONArray entryPoints;
 
@@ -82,13 +82,15 @@ public class LivePersonPlugin extends CordovaPlugin {
             .put(args.get(2))
             .put(args.get(3));
           getEngagement(callbackContext);
+          return true;
         }
-        else()
+        else
         {
             
-            showConversation(firstName,maintainResponse,callbackContext)
+            showConversation(firstName,maintainResponse,callbackContext);
+            return true;
         }
-        return false;
+        
     }
 
     private void coolMethod(String message, CallbackContext callbackContext) {
@@ -137,8 +139,8 @@ public class LivePersonPlugin extends CordovaPlugin {
         LpMessagingWrapper.getEngagement(context, entryPoints, new LpMessagingWrapper.GetEngagementListener() {
             @Override
             public void onSuccess(LPEngagementResponse response) {
-                callbackContext.success(response);
-                this.maintainResponse = response;
+                callbackContext.success("post Engagement");
+                maintainResponse = response;
                // showConversation(firstName, response, callbackContext); //TODO remove this line if want to call it from Ionic.
             }
 
