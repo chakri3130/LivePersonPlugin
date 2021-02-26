@@ -1,101 +1,92 @@
 package cordova.plugin.LivePersonPlugin;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
-import com.liveperson.infra.BadArgumentException;
-import com.liveperson.infra.CampaignInfo;
-import com.liveperson.infra.ConversationViewParams;
-import com.liveperson.infra.ICallback;
-import com.liveperson.infra.InitLivePersonProperties;
-import com.liveperson.infra.MonitoringInitParams;
-import com.liveperson.infra.auth.LPAuthenticationParams;
-import com.liveperson.infra.auth.LPAuthenticationType;
-import com.liveperson.infra.callbacks.InitLivePersonCallBack;
-import com.liveperson.infra.model.LPWelcomeMessage;
+import com.google.firebase.messaging.RemoteMessage;
 import com.liveperson.infra.model.MessageOption;
+import com.liveperson.infra.model.PushMessage;
 import com.liveperson.messaging.sdk.api.LivePerson;
 import com.liveperson.messaging.sdk.api.callbacks.LogoutLivePersonCallback;
-import com.liveperson.messaging.sdk.api.model.ConsumerProfile;
-import com.liveperson.monitoring.model.EngagementDetails;
-import com.liveperson.monitoring.model.LPMonitoringIdentity;
-import com.liveperson.monitoring.sdk.MonitoringParams;
-import com.liveperson.monitoring.sdk.api.LivepersonMonitoring;
-import com.liveperson.monitoring.sdk.callbacks.EngagementCallback;
-import com.liveperson.monitoring.sdk.callbacks.MonitoringErrorType;
 import com.liveperson.monitoring.sdk.responses.LPEngagementResponse;
-
-import cordova.plugin.LivePersonPlugin.ChatEntryPoint;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class echoes a string called from JavaScript.
  */
 public class LivePersonPlugin extends CordovaPlugin {
 
-//    QMC
-//    private static final String BRAND_ID = "70387001";
-//    private static final String APP_INSTALLATION_ID = "81be1920-b6cb-450d-87eb-d21b9c90e62f";
+    private static final String TAG = "LivePersonPlugin";
 
-    //  BH account
-    private  String BRAND_ID = "71373930";
-    private  String APP_INSTALLATION_ID = "8bc2f66b-fcf7-4aae-b559-69e322ea2504";
+    //    QMC
+    private static String BRAND_ID = "70387001";
+    private static String APP_INSTALLATION_ID = "81be1920-b6cb-450d-87eb-d21b9c90e62f";
 
-    private  String APP_ID = "com.quantummaterialscorp.healthid"; //TODO set appId. It's the applicationId, which will be used for FCM.
-    private  String ISSUER = "QMC_Android";
-    private  String firstName;
-    private  List<String> customEntryPoint = new ArrayList<>();
+    private String APP_ID = "com.quantummaterialscorp.healthid"; //It's the applicationId, which will be used for FCM.
+    private String ISSUER = "QMC_Android";
+    private String firstName;
+    private String LPResponse;
+    LPEngagementResponse maintainResponse
 
-    private ChatEntryPoint entryPoint = ChatEntryPoint.androidDefault; //TODO pass the correct entry point.
+    private JSONArray entryPoints;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("instantiateLPMessagingSDK")) {
-            firstName = args.getString(0);
-//             BRAND_ID = args.getString(1);
-//             APP_INSTALLATION_ID = args.getString(2);
-//             APP_ID = args.getString(3);
-//             ISSUER = args.getString(4);
+             firstName = args.getString(0);
+            // BRAND_ID = args.getString(1); //TODO question: is it possible that we change the BRAND_ID? Can we hardcode it or no.
+            // APP_INSTALLATION_ID = args.getString(2); //TODO save question as BRAND_ID
+            // APP_ID = args.getString(3);//TODO save question as BRAND_ID
+            // ISSUER = args.getString(4);//TODO save question as BRAND_ID
 //             try {
-//                 JSONObject customEntryPoints = new JSONObject();
-//                 customEntryPoints.put("entryPoint", args.getString(5));
-//                 Log.d("Recieved Custom",customEntryPoints.toString());
-//                 customEntryPoints.put("entryPointEnvironment", args.getString(6));
-//                 customEntryPoints.put("entryPointCountry", args.getString(7));
-//                 customEntryPoints.put("entryPointlanguage", args.getString(8));
-//                 Log.d("Recieved Custom",customEntryPoints.toString());
-//                 this.ConnectToBot(firstName, callbackContext);
+                // JSONObject customEntryPoints = new JSONObject();
+                // customEntryPoints.put("entryPoint", args.getString(5));
+                // Log.d("Recieved Custom", customEntryPoints.toString());
+                // customEntryPoints.put("entryPointEnvironment", args.getString(6));
+                // customEntryPoints.put("entryPointCountry", args.getString(7));
+                // customEntryPoints.put("entryPointlanguage", args.getString(8));
+                // Log.d("Recieved Custom", customEntryPoints.toString());
 
-//             }catch (JSONException e)
-//             {
-//                 Log.d("Recieved Custom",e.toString());
+                // entryPoints = new JSONArray();
+                // entryPoints.put(args.getString(5))
+                //         .put(args.getString(6))
+                //         .put(args.getString(7))
+                //         .put(args.getString(8));
+
+                // entryPoints = new JSONArray();
+                // entryPoints.put("android-default")
+                //         .put("dev")
+                //         .put("us")
+                //         .put("en");
+
+                this.ConnectToBot(firstName, callbackContext);
+
+//             } catch (JSONException e) {
+//                 Log.d("Recieved Custom", e.toString());
 //             }
 
-
-
-
-        this.ConnectToBot(firstName, callbackContext);
-
             return true;
-        }else{
+        }
+        else if(action.equals("ConnectToBot")){
           entryPoints = new JSONArray();
           entryPoints.put(args.get(0))
             .put(args.get(1))
             .put(args.get(2))
             .put(args.get(3));
           getEngagement(callbackContext);
+        }
+        else()
+        {
+            
+            showConversation(firstName,maintainResponse,callbackContext)
         }
         return false;
     }
@@ -112,7 +103,7 @@ public class LivePersonPlugin extends CordovaPlugin {
         if (message != null && message.length() > 0) {
             callbackContext.success(message);
 
-            initLpSDK();
+            initLpSDK(callbackContext);
             /*Context context = cordova.getActivity().getApplicationContext();
             Intent intent = new Intent(context, cordova.plugin.LivePersonPlugin.LivePersonChatRoom.class);
             this.cordova.getActivity().startActivity(intent);*/
@@ -121,120 +112,122 @@ public class LivePersonPlugin extends CordovaPlugin {
         }
     }
 
-    private void initLpSDK() {
+    public void initLpSDK(CallbackContext callbackContext) {
         Context context = cordova.getActivity().getApplicationContext();
-        MonitoringInitParams monitoringInitParams = new MonitoringInitParams(APP_INSTALLATION_ID);
-        LivePerson.initialize(context, new InitLivePersonProperties(BRAND_ID, APP_ID, monitoringInitParams, new InitLivePersonCallBack() {
+        LpMessagingWrapper.initializeLPMessagingSDK(context, new LpMessagingWrapper.Listener() {
             @Override
-            public void onInitSucceed() {
-
-                LPMonitoringIdentity identity = new LPMonitoringIdentity("", ISSUER);
-                JSONArray entryPoints = new JSONArray();
-                for (String entryPoint : entryPoint.entryPoints()) {
-                    entryPoints.put(entryPoint);
-                }
-                MonitoringParams params = new MonitoringParams("", entryPoints, new JSONArray());
-
-                LivepersonMonitoring.getEngagement(context, Collections.singletonList(identity), params, new EngagementCallback() {
-                    @Override
-                    public void onSuccess(@NotNull LPEngagementResponse response) {
-                        if (response.getEngagementDetailsList() != null) {
-                            try {
-                                EngagementDetails detail = response.getEngagementDetailsList().get(0);
-
-                                CampaignInfo campaignInfo = new CampaignInfo(Long.parseLong(detail.getCampaignId()),
-                                        Long.parseLong(detail.getEngagementId()), detail.getContextId(),
-                                        response.getSessionId(), response.getVisitorId());
-
-                                ConversationViewParams conversationViewParams = new ConversationViewParams()
-                                        .setCampaignInfo(campaignInfo);
-
-                                conversationViewParams.setLpWelcomeMessage(getWelcomeMessage(entryPoint));
-                                setUserProfile();
-                                LivePerson.showConversation(cordova.getActivity(), getLPAuthenticationParams(), conversationViewParams);
-                                registerLPPusher("");
-                            } catch (BadArgumentException e) {
-                                //TODO add error handling
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(@NotNull MonitoringErrorType monitoringErrorType, @Nullable Exception e) {
-                        //TODO add error handling
-                    }
-                });
+            public void onSuccess() {
+                callbackContext.success("pre_engagement");
+                Log.d(TAG, "pre_engagement");
+//                getEngagement(callbackContext); //TODO remove this line if want to call it from Ionic.
+//                 showConversationWithoutEngagement(firstName, callbackContext);
             }
 
             @Override
-            public void onInitFailed(Exception e) {
-                //TODO add error handling
+            public void onError(String error) {
+                callbackContext.error(error);
+                Log.e(TAG, error);
             }
-        }));
+        });
+    }
+
+    public void getEngagement(CallbackContext callbackContext) {
+        Context context = cordova.getActivity().getApplicationContext();
+        Log.d(TAG, "getEngagement with entry points: " + entryPoints);
+        LpMessagingWrapper.getEngagement(context, entryPoints, new LpMessagingWrapper.GetEngagementListener() {
+            @Override
+            public void onSuccess(LPEngagementResponse response) {
+                callbackContext.success(response);
+                this.maintainResponse = response;
+               // showConversation(firstName, response, callbackContext); //TODO remove this line if want to call it from Ionic.
+            }
+
+            @Override
+            public void onError(String error) {
+                callbackContext.error(error);
+                Log.e(TAG, error);
+            }
+        });
+    }
+
+    public void showConversation(String firstName, LPEngagementResponse response, CallbackContext callbackContext) {
+        //TODO Needs to set welcome message and optionItems from Ionic.
+        String welcomeMessage = "Hi, I'm BELLA, your automated health assistant. I'll be guiding you through your at-home COVID-19 test.";
+        List<MessageOption> optionItems = Collections.singletonList(new MessageOption("Start", "Start"));
+
+        LpMessagingWrapper.showConversation(cordova.getActivity(), firstName, welcomeMessage, optionItems, response, new LpMessagingWrapper.Listener() {
+            @Override
+            public void onSuccess() {
+                callbackContext.success();
+                //TODO register pusher either here or in Ionic.
+            }
+
+            @Override
+            public void onError(String error) {
+                callbackContext.error(error);
+                Log.e(TAG, error);
+            }
+        });
+    }
+
+    public void showConversationWithoutEngagement(String firstName, CallbackContext callbackContext) {
+        //TODO Needs to set welcome message and optionItems from Ionic.
+        String welcomeMessage = "Hi, I'm BELLA, your automated health assistant. I'll be guiding you through your at-home COVID-19 test.";
+        List<MessageOption> optionItems = Collections.singletonList(new MessageOption("Start", "Start"));
+
+        LpMessagingWrapper.showConversation(cordova.getActivity(), firstName, welcomeMessage, optionItems, new LpMessagingWrapper.Listener() {
+            @Override
+            public void onSuccess() {
+                callbackContext.success();
+                //TODO register pusher either here or in Ionic.
+            }
+
+            @Override
+            public void onError(String error) {
+                callbackContext.error(error);
+                Log.e(TAG, error);
+            }
+        });
+    }
+
+    public void registerLpPusher(String deviceToken, CallbackContext callbackContext) {
+        LpMessagingWrapper.registerLPPusher(deviceToken, new LpMessagingWrapper.Listener() {
+            @Override
+            public void onSuccess() {
+                callbackContext.success();
+            }
+
+            @Override
+            public void onError(String error) {
+                callbackContext.error(error);
+                Log.e(TAG, error);
+            }
+        });
     }
 
     /**
-     * Set the authentication details.
-     *
-     * @return the {@link LPAuthenticationParams} object.
+     * This is an example of how push notification works with SDK.
+     * TODO The method below should show a notification banner. If the way Ionic work is different, you can simply ignore/delete this method.
      */
-    private LPAuthenticationParams getLPAuthenticationParams() {
-        return new LPAuthenticationParams(LPAuthenticationType.SIGN_UP);
-    }
+    private void showPushNotification(Context context, PushMessage pushMessage) {
 
-    private void setUserProfile() {
-        //TODO set user profile below
-        ConsumerProfile userProfile = new ConsumerProfile.Builder()
-                .setFirstName("")
-                .setLastName("")
-                .setNickname("")
-                .setPhoneNumber("")
-                .setAvatarUrl("").build();
-        LivePerson.setUserProfile(userProfile);
-    }
-
-    private LPWelcomeMessage getWelcomeMessage(ChatEntryPoint entryPoint) {
-        LPWelcomeMessage lpWelcomeMessage = new LPWelcomeMessage(entryPoint.welcomeMessage());
-        List<MessageOption> optionItems = new ArrayList<>(entryPoint.quickReplies());
-        try {
-            lpWelcomeMessage.setMessageOptions(optionItems);
-        } catch (Exception e) {
-            //TODO add error handling
-        }
-        lpWelcomeMessage.setNumberOfItemsPerRow(1);
-        lpWelcomeMessage.setMessageFrequency(LPWelcomeMessage.MessageFrequency.FIRST_TIME_CONVERSATION);
-        return lpWelcomeMessage;
-    }
-
-    public void registerLPPusher(String deviceToken) {
-        LivePerson.registerLPPusher(BRAND_ID, APP_ID, deviceToken, getLPAuthenticationParams(), new ICallback<Void, Exception>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-                //TODO add error handling
-            }
-        });
     }
 
     /**
      * Logout the SDK. Device will be unregistered from LP pusher.
      * All cached data will be deleted.
      */
-    public void logout() {
+    public void logout(CallbackContext callbackContext) {
         Context context = cordova.getActivity().getApplicationContext();
         LivePerson.logOut(context, BRAND_ID, APP_ID, new LogoutLivePersonCallback() {
             @Override
             public void onLogoutSucceed() {
-                //TODO other tasks after logout
+                callbackContext.success("logout succeed");
             }
 
             @Override
             public void onLogoutFailed() {
-                //TODO add error handling
+                callbackContext.error("Failed to logout");
             }
         });
     }
@@ -244,5 +237,29 @@ public class LivePersonPlugin extends CordovaPlugin {
      */
     public void clearHistory() {
         LivePerson.clearHistory();
+    }
+
+    public void resolveConversation() {
+        LivePerson.resolveConversation();
+    }
+
+    /**
+     * Pass the data message received from {@link com.gae.scaffolder.plugin.MyFirebaseMessagingService#onMessageReceived(RemoteMessage)}
+     * The message push notification received is
+     * <br/>
+     * <b>{payload={"badge":1,"sequence":8,"conversationId":"3e951ec7-a450-4a24-8058-b19cc9881c67","brandId":"61895277","backendService":"ams","originatorId":"61895277.1197179432","dialogId":"3e951ec7-a450-4a24-8058-b19cc9881c67"}, message=Mask Push Notification}</b>
+     * <br/>
+     * <p>
+     * {@link LivePerson#handlePushMessage(Context, Map, String, boolean)} parses it to an {@link PushMessage} object.
+     * TODO call this method when receive push notification.
+     *
+     * @param remoteMessageData It's the data message received from FCM. The value is RemoteMessage.getData().
+     */
+    public void showPushNotification(Map<String, String> remoteMessageData) {
+        Context context = cordova.getActivity().getApplicationContext();
+        PushMessage message = LivePerson.handlePushMessage(context, remoteMessageData, BRAND_ID, false);
+        if (message != null) {
+            showPushNotification(context, message);
+        }
     }
 }

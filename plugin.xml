@@ -58,8 +58,8 @@
          </feature>
       </config-file>
       <config-file parent="/*" target="AndroidManifest.xml"></config-file>
-      <source-file src="src/android/LivePersonPlugin.java" target-dir="src/cordova/plugin/LivePersonPlugin/LivePersonPlugin" />
-      <source-file src="src/android/ChatEntryPoint.java" target-dir="src/cordova/plugin/LivePersonPlugin/ChatEntryPoint" />
+      <source-file src="src/android/LivePersonPlugin.java" target-dir="src/cordova/plugin/LivePersonPlugin" />
+      <source-file src="src/android/LpMessagingWrapper.java" target-dir="src/cordova/plugin/LivePersonPlugin" />
       <framework src="com.liveperson.android:lp_messaging_sdk:5.5.0" />
       <resource-file src="src/android/res/drawable/ic_action_name.xml" target="res/drawable/ic_action_name.xml" />
       <resource-file src="src/android/res/drawable/ic_bg.png" target="res/drawable/ic_bg.png" />
