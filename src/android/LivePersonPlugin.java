@@ -62,33 +62,40 @@ public class LivePersonPlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (action.equals("ConnectToBot")) {
+        if (action.equals("instantiateLPMessagingSDK")) {
             firstName = args.getString(0);
-            BRAND_ID = args.getString(1);
-            APP_INSTALLATION_ID = args.getString(2);
-            APP_ID = args.getString(3);
-            ISSUER = args.getString(4);
-            try {
-                JSONObject customEntryPoints = new JSONObject();
-                customEntryPoints.put("entryPoint", args.getString(5));
-                Log.d("Recieved Custom",customEntryPoints.toString());
-                customEntryPoints.put("entryPointEnvironment", args.getString(6));
-                customEntryPoints.put("entryPointCountry", args.getString(7));
-                customEntryPoints.put("entryPointlanguage", args.getString(8));
-                Log.d("Recieved Custom",customEntryPoints.toString());
-                this.ConnectToBot(firstName, callbackContext);
+//             BRAND_ID = args.getString(1);
+//             APP_INSTALLATION_ID = args.getString(2);
+//             APP_ID = args.getString(3);
+//             ISSUER = args.getString(4);
+//             try {
+//                 JSONObject customEntryPoints = new JSONObject();
+//                 customEntryPoints.put("entryPoint", args.getString(5));
+//                 Log.d("Recieved Custom",customEntryPoints.toString());
+//                 customEntryPoints.put("entryPointEnvironment", args.getString(6));
+//                 customEntryPoints.put("entryPointCountry", args.getString(7));
+//                 customEntryPoints.put("entryPointlanguage", args.getString(8));
+//                 Log.d("Recieved Custom",customEntryPoints.toString());
+//                 this.ConnectToBot(firstName, callbackContext);
 
-            }catch (JSONException e)
-            {
-                Log.d("Recieved Custom",e.toString());
-            }
-
-
+//             }catch (JSONException e)
+//             {
+//                 Log.d("Recieved Custom",e.toString());
+//             }
 
 
 
+
+        this.ConnectToBot(firstName, callbackContext);
 
             return true;
+        }else{
+          entryPoints = new JSONArray();
+          entryPoints.put(args.get(0))
+            .put(args.get(1))
+            .put(args.get(2))
+            .put(args.get(3));
+          getEngagement(callbackContext);
         }
         return false;
     }
